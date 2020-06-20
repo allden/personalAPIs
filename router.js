@@ -3,7 +3,10 @@ const router = express.Router();
 const geoip = require('geoip-lite');
 
 router.get('/', (req, res) => {
-    const userIp = req.ip;
+    let userIp = req.headers['x-forwarded-for'];
+    if(userIp === null) {
+        userIp = req.getRemoteAddr();
+    };
     const requestedIp = req.query.ip;
     const queryFilter = /^[0-9\.]+$/;
     let geo = geoip.lookup(userIp);
