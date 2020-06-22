@@ -3,6 +3,19 @@ const router = express.Router();
 const geoip = require('geoip-lite');
 const fetch = require('node-fetch');
 
+router.get('/', (req, res) => {
+    const url = `${req.protocol}://${req.hostname}`;
+    return res.json({
+        'message': 'Welcome to the API.',
+        'endpoints': {
+            opencagedata: `${url}/opencagedata/?q=43.000,10.0000`,
+            openweathermap: `${url}/openweathermap/?lat=43.000&lon=10.0000&exclude=hourly,daily,minutely&units=imperial|metric|standard`,
+            iplookup: `${url}/iplookup/?ip=1.1.1.1(optional)`,
+            foursquare: `${url}/foursquare/?ll=43.000,10.0000&query=cafe&v=20180323&limit=10`
+        }
+    });
+});
+
 router.get('/iplookup', (req, res) => {
     let userIp = req.headers['x-forwarded-for'];
     if(userIp === null) {
@@ -33,6 +46,7 @@ router.get('/foursquare', (req, res) => {
     const clientId = process.env.FOURSQUARE_CLIENT_ID;
     const clientSecret = process.env.FOURSQUARE_CLIENT_SECRET;
     let url = `https://api.foursquare.com/v2/venues/explore?client_id=${clientId}&client_secret=${clientSecret}&ll=${ll}&query=${query}&v=${v}&limit=${limit}`;
+    console.log(url);
 
     fetch(url)
     .then(fetchRes => fetchRes.json())
@@ -45,6 +59,7 @@ router.get('/openweathermap', (req, res) => {
     const {lat, lon, exclude, units} = req.query;
     const appId = process.env.OPENWEATHERMAP_APPID;
     let url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=${exclude}&appid=${appId}&units=${units}`;
+    console.log(url);
 
     fetch(url)
     .then(fetchRes => fetchRes.json())
@@ -57,6 +72,7 @@ router.get('/opencagedata', (req, res) => {
     const {q} = req.query;
     const key = process.env.OPENCAGEDATA_APPID;
     const url = `https://api.opencagedata.com/geocode/v1/json?q=${q}&key=${key}`;
+    console.log(url);
 
     fetch(url)
     .then(fetchRes => fetchRes.json())
