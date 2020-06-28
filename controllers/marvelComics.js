@@ -1,35 +1,22 @@
-const {fetchAndRespond, generateAuth} = require('./utils');
-
-const url = 'http://gateway.marvel.com/v1/public';
+const {fetchAndRespond, generateUrl} = require('./utils');
 
 // routes
 module.exports.getComics = (req, res) => {
-    const auth = generateAuth();
-    const endpoint = `${url}/comics?${auth}`;
-
+    const endpoint = generateUrl(req, 'comics');
     fetchAndRespond(endpoint, res);
 };
 
 module.exports.getComicById = (req, res) => {
-    const {id} = req.params;
-    const auth = generateAuth();
-    const endpoint = `${url}/comics/${id}?${auth}`;
-
+    const endpoint = generateUrl(req, 'comics');
     fetchAndRespond(endpoint, res);
 };
 
 module.exports.getComicCharacters = (req, res) => {
-    const {id} = req.params;
-    const auth = generateAuth();
-    const endpoint = `${url}/comics/${id}/characters?${auth}`;
-
+    const endpoint = generateUrl(req, 'comics', 'characters');
     fetchAndRespond(endpoint, res);
 };
 
 module.exports.getComicCreators = (req, res) => {
-    const {id} = req.params;
-    const auth = generateAuth();
-    const endpoint = `${url}/comics/${id}/creators?${auth}`;
-
+    const endpoint = generateUrl(req, 'comics', 'creators');
     fetchAndRespond(endpoint, res);
 };
